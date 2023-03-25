@@ -258,7 +258,10 @@ For example, if you press the ‘North’ key, it will return ‘N0’, and when
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>id</strong> (<em>int</em>) – The id or index of the IR sensor.
-The id can be either LEFT = 0 or RIGHT = 1.</p>
+The id can be either LEFT = 0 or RIGHT = 1.
+The analog reading of the IR sensor is a value between 0 and 4095.
+The left IR sensor is connected to the 34 pin of the ESP32.
+The right IR sensor is connected to the 35 pin of the ESP32.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>value</strong> – The analog reading of the IR sensor.</p>
@@ -299,7 +302,8 @@ So, this will become the speed of the right motor which needs to go backward.</p
 <dd><p>Returns the state of the button, whether it is pressed or not.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>button</strong> (<em>int</em>) – The id of the button. The id can be either LEFT = 0 or RIGHT = 0.</p>
+<dd class="field-odd"><p><strong>button</strong> (<em>int</em>) – The id of the button. The id can be either LEFT = 0 or RIGHT = 0.
+The LEFT and the RIGHT buttons are both connected to the same analog pin 36.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>state</strong> – The state of the button. True if the button is pressed, False otherwise.</p>
@@ -364,7 +368,11 @@ You may also use the constants T1 = 15, T2 = 13, T3 = 12, T4 = 14, T5 = 27 for t
 <dl class="py method">
 <dt class="sig sig-object py" id="avinya.Avinya.moveForward">
 <span class="sig-name descname"><span class="pre">moveForward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.moveForward" title="Permalink to this definition"></a></dt>
-<dd><p>Moves the robot forward for a specified time.</p>
+<dd><p>Moves the robot forward for a specified time.
+The robot moves forward by setting the direction of both the left and right motors to forward.
+The robot has 2 motors, one on the left and one on the right.
+The left motor is connected to the IN1: 2 and IN2: 17 pins of the ESP32.
+The right motor is connected to the IN1: 4 and IN2: 16 pins of the ESP32.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>t</strong> (<em>int</em>) – The time in seconds for which the robot should move forward.</p>
