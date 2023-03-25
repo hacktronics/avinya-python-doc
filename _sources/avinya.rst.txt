@@ -1,0 +1,7 @@
+avinya module
+=============
+
+.. automodule:: avinya
+   :members:
+   :undoc-members:
+   :show-inheritance:

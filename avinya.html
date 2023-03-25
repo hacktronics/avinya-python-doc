@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>avinya module &mdash; Avinya 0.0.1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to Avinya’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Avinya
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">avinya module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#avinya.Avinya"><code class="docutils literal notranslate"><span class="pre">Avinya</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.connectGamepad"><code class="docutils literal notranslate"><span class="pre">Avinya.connectGamepad()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.connectWifi"><code class="docutils literal notranslate"><span class="pre">Avinya.connectWifi()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.disconnectGamepad"><code class="docutils literal notranslate"><span class="pre">Avinya.disconnectGamepad()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.followLine"><code class="docutils literal notranslate"><span class="pre">Avinya.followLine()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.getDistance"><code class="docutils literal notranslate"><span class="pre">Avinya.getDistance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.getGamepadKey"><code class="docutils literal notranslate"><span class="pre">Avinya.getGamepadKey()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.getIRSensorValue"><code class="docutils literal notranslate"><span class="pre">Avinya.getIRSensorValue()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.initLineFollowingParameters"><code class="docutils literal notranslate"><span class="pre">Avinya.initLineFollowingParameters()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.isButtonPressed"><code class="docutils literal notranslate"><span class="pre">Avinya.isButtonPressed()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.isIRSensorActive"><code class="docutils literal notranslate"><span class="pre">Avinya.isIRSensorActive()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.isPadTouched"><code class="docutils literal notranslate"><span class="pre">Avinya.isPadTouched()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.moveBackward"><code class="docutils literal notranslate"><span class="pre">Avinya.moveBackward()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.moveForward"><code class="docutils literal notranslate"><span class="pre">Avinya.moveForward()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.playAudio"><code class="docutils literal notranslate"><span class="pre">Avinya.playAudio()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.playAudioUntilDone"><code class="docutils literal notranslate"><span class="pre">Avinya.playAudioUntilDone()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.playMelodies"><code class="docutils literal notranslate"><span class="pre">Avinya.playMelodies()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.playTone"><code class="docutils literal notranslate"><span class="pre">Avinya.playTone()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.readAnalogInput"><code class="docutils literal notranslate"><span class="pre">Avinya.readAnalogInput()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.readButtonState"><code class="docutils literal notranslate"><span class="pre">Avinya.readButtonState()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.readDigitalInput"><code class="docutils literal notranslate"><span class="pre">Avinya.readDigitalInput()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.rgbClearDisplay"><code class="docutils literal notranslate"><span class="pre">Avinya.rgbClearDisplay()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.rgbClearPixel"><code class="docutils literal notranslate"><span class="pre">Avinya.rgbClearPixel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.rgbDrawPattern"><code class="docutils literal notranslate"><span class="pre">Avinya.rgbDrawPattern()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.rgbSetBrightness"><code class="docutils literal notranslate"><span class="pre">Avinya.rgbSetBrightness()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.rgbSetPixelColor"><code class="docutils literal notranslate"><span class="pre">Avinya.rgbSetPixelColor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.rgbShowAnimation"><code class="docutils literal notranslate"><span class="pre">Avinya.rgbShowAnimation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.rgbShowEmotion"><code class="docutils literal notranslate"><span class="pre">Avinya.rgbShowEmotion()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.rgbShowScrollingText"><code class="docutils literal notranslate"><span class="pre">Avinya.rgbShowScrollingText()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.rgbShowText"><code class="docutils literal notranslate"><span class="pre">Avinya.rgbShowText()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.runMotor"><code class="docutils literal notranslate"><span class="pre">Avinya.runMotor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.setIRSensorThreshold"><code class="docutils literal notranslate"><span class="pre">Avinya.setIRSensorThreshold()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.setMotorDirection"><code class="docutils literal notranslate"><span class="pre">Avinya.setMotorDirection()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.setMotorSpeed"><code class="docutils literal notranslate"><span class="pre">Avinya.setMotorSpeed()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.setServoAngle"><code class="docutils literal notranslate"><span class="pre">Avinya.setServoAngle()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.setTempo"><code class="docutils literal notranslate"><span class="pre">Avinya.setTempo()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.setUltrasonicPins"><code class="docutils literal notranslate"><span class="pre">Avinya.setUltrasonicPins()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.setVolume"><code class="docutils literal notranslate"><span class="pre">Avinya.setVolume()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.showCopyright"><code class="docutils literal notranslate"><span class="pre">Avinya.showCopyright()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.showVersion"><code class="docutils literal notranslate"><span class="pre">Avinya.showVersion()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.speak"><code class="docutils literal notranslate"><span class="pre">Avinya.speak()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.stopAudio"><code class="docutils literal notranslate"><span class="pre">Avinya.stopAudio()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.stopMotor"><code class="docutils literal notranslate"><span class="pre">Avinya.stopMotor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.stopRobot"><code class="docutils literal notranslate"><span class="pre">Avinya.stopRobot()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.turnLeft"><code class="docutils literal notranslate"><span class="pre">Avinya.turnLeft()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.turnRight"><code class="docutils literal notranslate"><span class="pre">Avinya.turnRight()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.writeAnalogOutput"><code class="docutils literal notranslate"><span class="pre">Avinya.writeAnalogOutput()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.writeDigitalOutput"><code class="docutils literal notranslate"><span class="pre">Avinya.writeDigitalOutput()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#avinya.startScratchMode"><code class="docutils literal notranslate"><span class="pre">startScratchMode()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Avinya</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">avinya module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/avinya.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-avinya">
+<span id="avinya-module"></span><h1>avinya module<a class="headerlink" href="#module-avinya" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="avinya.Avinya">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">avinya.</span></span><span class="sig-name descname"><span class="pre">Avinya</span></span><a class="headerlink" href="#avinya.Avinya" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Avinya is a ESP32 based robotics board that can be controlled using Python and Scratch.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.connectGamepad">
+<span class="sig-name descname"><span class="pre">connectGamepad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gamepadIP</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.connectGamepad" title="Permalink to this definition"></a></dt>
+<dd><p>Connects to the CodeSkool mobile gamepad app. You can download the app from the Google Play Store:
+<a class="reference external" href="https://play.google.com/store/apps/details?id=cc.codeskool.gamepad">https://play.google.com/store/apps/details?id=cc.codeskool.gamepad</a>.
+You need to connect the gamepad app to the same WiFi network as the robot.
+You will get the connection IP address, when you start the gamepad app.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>gamepadIP</strong> (<em>str</em>) – The IP address of the gamepad app, which hosts the websocket based server.
+You need to provide just the IP address, and not the port number or the protocol.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.connectWifi">
+<span class="sig-name descname"><span class="pre">connectWifi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ssid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.connectWifi" title="Permalink to this definition"></a></dt>
+<dd><p>Connects to a wifi network. If the connection is established or already exists, it will return True.
+If the connection cannot be established, it will return False. The function will wait for 10 seconds for the connection to be established.
+If the connection is not established within 10 seconds, it will return False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ssid</strong> (<em>str</em>) – The SSID of the wifi network</p></li>
+<li><p><strong>password</strong> (<em>str</em>) – The password of the wifi network</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>result</strong> – True if the connection is established, False otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.disconnectGamepad">
+<span class="sig-name descname"><span class="pre">disconnectGamepad</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.disconnectGamepad" title="Permalink to this definition"></a></dt>
+<dd><p>Disconnects from the CodeSkool mobile gamepad app.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.followLine">
+<span class="sig-name descname"><span class="pre">followLine</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.followLine" title="Permalink to this definition"></a></dt>
+<dd><p>Makes the robot follow a black line using the front line following sensors.
+The robot will stop when it reaches a black horizontal line, i.e. when all the sensors detects a black line.
+If one of the line following sensors on the edge detects a black line,
+the robot will turn in the direction of the sensor that detected the black line,
+to keep the line in the middle of the robot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.getDistance">
+<span class="sig-name descname"><span class="pre">getDistance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.getDistance" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the distance from the object calculated using the ultrasonic sensor in mm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>int</em>) – The id or index of the ultrasonic sensor.
+The index value can be either 0 or 1.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>distance</strong> – The distance of the object from the ultrasonic sensor in mm.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.getGamepadKey">
+<span class="sig-name descname"><span class="pre">getGamepadKey</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.getGamepadKey" title="Permalink to this definition"></a></dt>
+<dd><p>Gets the key pressed on the gamepad. Whenever you press a key on the gamepad, it will return the code of the key.
+When you release the key, it will return another code with a ‘1’ appended to the key code, instead of ‘0’.
+For example, if you press the ‘North’ key, it will return ‘N0’, and when you release the key, it will return ‘N1’.</p>
+<p>The key codes can be one of the following:</p>
+<blockquote>
+<div><p>North: ‘N0’, ‘N1’</p>
+<p>South: ‘S0’, ‘S1’</p>
+<p>East: ‘E0’, ‘E1’</p>
+<p>West: ‘W0’, ‘W1’</p>
+<p>Triangle: ‘T0’, ‘T1’</p>
+<p>Circle: ‘C0’, ‘C1’</p>
+<p>Cross: ‘X0’, ‘X1’</p>
+<p>Square: ‘Q0’, ‘Q1’</p>
+<p>Select: ‘L0’, ‘L1’</p>
+<p>Start: ‘R0’, ‘R1’</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> – The key pressed on the gamepad.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.getIRSensorValue">
+<span class="sig-name descname"><span class="pre">getIRSensorValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.getIRSensorValue" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the IR sensor analog reading.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>int</em>) – The id or index of the IR sensor.
+The id can be either LEFT = 0 or RIGHT = 1.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>value</strong> – The analog reading of the IR sensor.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.initLineFollowingParameters">
+<span class="sig-name descname"><span class="pre">initLineFollowingParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">leftMotorSpeed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rightMotorSpeed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">turnMotorFSpeed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">turnMotorBSpeed</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.initLineFollowingParameters" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize the line following parameters, this function is called before using the followLine function.
+It sets the speed of the motors while driving the robot and keeping it on the line.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>leftMotorSpeed</strong> (<em>int</em>) – The speed of the left motor, when the robot is on the line and to move forward</p></li>
+<li><p><strong>rightMotorSpeed</strong> (<em>int</em>) – The speed of the right motor, when the robot is on the line and to move forward</p></li>
+<li><p><strong>turnMotorFSpeed</strong> (<em>int</em>) – The speed of the motor, which needs to go into forward direction. So, when the left IR sensor detects a black line,
+the robot needs to turn left. For that, the left motor needs to go backward and the right motor needs to go forward.
+So, this will become the speed of the right motor which needs to go forward.</p></li>
+<li><p><strong>turnMotorBSpeed</strong> (<em>int</em>) – The speed of the motor, which needs to go into backward direction. So, when the right IR sensor detects a black line,
+the robot needs to turn right. For that, the left motor needs to go forward and the right motor needs to go backward.
+So, this will become the speed of the right motor which needs to go backward.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.isButtonPressed">
+<span class="sig-name descname"><span class="pre">isButtonPressed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">button</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.isButtonPressed" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the state of the button, whether it is pressed or not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>button</strong> (<em>int</em>) – The id of the button. The id can be either LEFT = 0 or RIGHT = 0.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>state</strong> – The state of the button. True if the button is pressed, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.isIRSensorActive">
+<span class="sig-name descname"><span class="pre">isIRSensorActive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.isIRSensorActive" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the state of the IR sensor, whether it is active or not.
+The IR sensor is active when it detects a black line.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>int</em>) – The id or index of the IR sensor. The id can be either LEFT = 0 or RIGHT = 1.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>state</strong> – The state of the IR sensor. True if the IR sensor is active, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.isPadTouched">
+<span class="sig-name descname"><span class="pre">isPadTouched</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pin</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.isPadTouched" title="Permalink to this definition"></a></dt>
+<dd><p>Returns True if the touch pad is touched, i.e. the value is less than the touch threshold of 300, otherwise returns False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pin</strong> (<em>int</em>) – The pin number of the touch pad.
+The pin number can be either 4, 0, 2, 15, 13, 12, 14, 27, 33, 32.
+You may also use the constants T1 = 15, T2 = 13, T3 = 12, T4 = 14, T5 = 27 for the touch pad pins.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>isTouched</strong> – True if the touch pad is touched, i.e. the value is less than the touch threshold of 300, otherwise returns False.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.moveBackward">
+<span class="sig-name descname"><span class="pre">moveBackward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.moveBackward" title="Permalink to this definition"></a></dt>
+<dd><p>Moves the robot backward for a specified time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<em>int</em>) – The time in seconds for which the robot should move backward.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.moveForward">
+<span class="sig-name descname"><span class="pre">moveForward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.moveForward" title="Permalink to this definition"></a></dt>
+<dd><p>Moves the robot forward for a specified time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<em>int</em>) – The time in seconds for which the robot should move forward.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.playAudio">
+<span class="sig-name descname"><span class="pre">playAudio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">audioFile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.playAudio" title="Permalink to this definition"></a></dt>
+<dd><p>Play an wave audio file. This function is non-blocking and will return immediately and continuously play the audio file.
+It will play the audio file at the default sample rate of 16KHz using the I2S interface on Pins:</p>
+<blockquote>
+<div><p>WS_PIN = 25</p>
+<p>SCK_PIN = 26</p>
+<p>SD_OUT_PIN = 22</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>audioFile</strong> (<em>str</em>) – The path to the wave audio file to play, ex: ‘/audio.wav’</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.playAudioUntilDone">
+<span class="sig-name descname"><span class="pre">playAudioUntilDone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">audioFile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.playAudioUntilDone" title="Permalink to this definition"></a></dt>
+<dd><p>Play an wave audio file until it is done. This function is blocking and will not return until the audio file is done playing.
+It will play the audio file at the default sample rate of 16KHz using the I2S interface on Pins:</p>
+<blockquote>
+<div><p>WS_PIN = 25</p>
+<p>SCK_PIN = 26</p>
+<p>SD_OUT_PIN = 22</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>audioFile</strong> (<em>str</em>) – The path to the wave audio file to play, ex: ‘/audio.wav’</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.playMelodies">
+<span class="sig-name descname"><span class="pre">playMelodies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">melodies</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duty</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32767</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.playMelodies" title="Permalink to this definition"></a></dt>
+<dd><p>Play melody using the buzzer connected to DAC Pin 25.
+The melody is a list of notes, where each note is a string notation.
+The duration is the duration of each note in milliseconds.
+The duty is the duty cycle of the buzzer. The default duty cycle is 50% (32767).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>melodies</strong> (<em>list</em>) – <p>A list of notes to play, where each note is a string notation.</p>
+<p>An example of a melody is:</p>
+<p>[‘C4’, ‘C4’, ‘_’, ‘G4’, ‘G4’, ‘_’, ‘A4’, ‘A4’, ‘_’, ‘G4’]</p>
+<p>You can append a number to the note to change the octave, for example:
+[‘C4’, ‘C5’, ‘C6’]</p>
+<p>The ‘_’ character is used to indicate a rest.</p>
+<p>You can also append ‘#’ to the note to indicate a sharp, for example:</p>
+<p>[‘C4#’, ‘D4#’, ‘F4#’, ‘G4#’, ‘A4#’]</p>
+</p></li>
+<li><p><strong>duration</strong> (<em>int</em>) – The duration of each note in milliseconds.</p></li>
+<li><p><strong>duty</strong> (<em>int</em>) – The duty cycle of the buzzer. The default duty cycle is 50% (32767).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.playTone">
+<span class="sig-name descname"><span class="pre">playTone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">note</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.playTone" title="Permalink to this definition"></a></dt>
+<dd><p>Play a tone using the buzzer connected to DAC Pin 25.
+The note is the frequency of the tone in Hz.
+The duration is the duration of the tone in milliseconds.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>note</strong> (<em>int</em>) – The frequency of the tone in Hz.</p></li>
+<li><p><strong>duration</strong> (<em>int</em>) – The duration of the tone in milliseconds.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.readAnalogInput">
+<span class="sig-name descname"><span class="pre">readAnalogInput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pin</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.readAnalogInput" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the value of the analog reading at the specified input pin.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pin</strong> (<em>int</em>) – The pin number of the analog input.
+The pin number can be either 34, 35, 32, 33, 25, 26, 27, 14, 12, 13, 15, 2, 4, 0, 23, 22, 21, 19, 18, 5, 17, 16.
+You can also use the constants: A1 = 33, A2 = 32, A3 = 39</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>value</strong> – The value of the analog reading at the specified input pin.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.readButtonState">
+<span class="sig-name descname"><span class="pre">readButtonState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pin</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.readButtonState" title="Permalink to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Returns the state of the button, whether it is pressed or not.</dt><dd><p>It will read the input pin and return the value of the pin.
+When the button is pressed, the pin will be connected to ground and the value will be 0.
+When the button is not pressed, the pin will be connected to 3.3V and the value will be 1.
+The pull up resistor will pull the pin to 3.3V when the button is not pressed.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pin</strong> (<em>int</em>) – The pin number of the button.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>state</strong> – The state of the button. True if the button is pressed, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.readDigitalInput">
+<span class="sig-name descname"><span class="pre">readDigitalInput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pin</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.readDigitalInput" title="Permalink to this definition"></a></dt>
+<dd><p>Reads the state of the specified digital input pin.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pin</strong> (<em>int</em>) – The pin number of the digital input.
+The pin number can be either 34, 35, 32, 33, 25, 26, 27, 14, 12, 13, 15, 2, 4, 0, 23, 22, 21, 19, 18, 5, 17, 16.
+You can also use the constants: D1 = 18, D2 = 19, D3 = 26</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>state</strong> – The state of the specified digital input pin. The state can be either 0 or 1. 0 means LOW and 1 means HIGH.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.rgbClearDisplay">
+<span class="sig-name descname"><span class="pre">rgbClearDisplay</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.rgbClearDisplay" title="Permalink to this definition"></a></dt>
+<dd><p>Clears the RGB Neopixel display. All pixels will be turned off.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>None</strong> – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.rgbClearPixel">
+<span class="sig-name descname"><span class="pre">rgbClearPixel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pixel</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.rgbClearPixel" title="Permalink to this definition"></a></dt>
+<dd><p>Clears a specific pixel on the RGB Neopixel display.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pixel</strong> (<em>int</em>) – The pixel number on the RGB Neopixel display. The pixel number is 0 based.
+The pixels index/number starts from the left and goes to the right,
+and then the next row.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.rgbDrawPattern">
+<span class="sig-name descname"><span class="pre">rgbDrawPattern</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.rgbDrawPattern" title="Permalink to this definition"></a></dt>
+<dd><p>Draws a pattern on the RGB LED NeoPixel strip, connected to the Pin 21 of the ESP32.
+The pattern is a string of characters, where each character represents a color.
+The characters can be either:</p>
+<blockquote>
+<div><p>‘0’ for BLACK,</p>
+<p>‘1’ for WHITE,</p>
+<p>‘R’ for RED,</p>
+<p>‘G’ for GREEN,</p>
+<p>‘B’ for BLUE,</p>
+<p>‘O’ for ORANGE,</p>
+<p>‘Y’ for DARK YELLOW,</p>
+<p>‘P’ for PINK,</p>
+<p>‘L’ for LIME GREEN or</p>
+<p>‘C’ for CYAN.</p>
+</div></blockquote>
+<p>The pattern string should be of length 35, where each character represents a LED on the NeoPixel strip.
+The first character in the string represents the LED at the top left corner of the strip,
+and the last character in the string represents the LED at the bottom right corner of the strip.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pattern</strong> (<em>str</em>) – The pattern string to be drawn on the NeoPixel strip.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.rgbSetBrightness">
+<span class="sig-name descname"><span class="pre">rgbSetBrightness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">brightness</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.rgbSetBrightness" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the brightness of the RGB Neopixel display.
+The brightness can be any value between 0 and 100.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>brightness</strong> (<em>int</em>) – The brightness of the RGB Neopixel display. The brightness can be any value between 0 and 100.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.rgbSetPixelColor">
+<span class="sig-name descname"><span class="pre">rgbSetPixelColor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pixel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.rgbSetPixelColor" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the color of a specific pixel on the RGB Neopixel display.
+The pixel number is 0 based. The pixels index/number starts from the left and goes to the right,
+and then the next row. The color is a tuple of 3 values (R, G, B) where each value is between 0 and 255.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pixel</strong> (<em>int</em>) – The pixel number on the RGB Neopixel display. The pixel number is 0 based.
+The pixels index/number starts from the left and goes to the right, and then to the next row again from left to right and so on.
+There are 35 pixels in total, in a 5x7 matrix, starting from the top left corner, and ending at the bottom right corner.
+The pixel number starts from 0 and ends at 34.</p></li>
+<li><p><strong>color</strong> (<em>tuple</em>) – The color of the pixel. The color is a tuple of 3 values (R, G, B) where each value is between 0 and 255.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.rgbShowAnimation">
+<span class="sig-name descname"><span class="pre">rgbShowAnimation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">animation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.rgbShowAnimation" title="Permalink to this definition"></a></dt>
+<dd><p>Show animation on the RGB NeoPixel LED strip. Each animation frame is shown for 1 second.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>animation</strong> (<em>int</em>) – The animation to show. It can be one of the following values: POLICE_SIREN.</p></li>
+<li><p><strong>times</strong> (<em>int</em>) – The number of times to show the animation.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.rgbShowEmotion">
+<span class="sig-name descname"><span class="pre">rgbShowEmotion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emotion</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.rgbShowEmotion" title="Permalink to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Shows an emotion on the RGB Neopixel display.</dt><dd><p>It displays a pattern or emoji on the RGB Neopixel display, based on the emotion passed as a parameter.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>emotion</strong> (<em>str</em>) – The emotion to be displayed on the RGB Neopixel display.
+The emotion can be either HAPPY, ANGRY, BASIC, CRYING, DISCO, GIGGLE, SUPERANGRY, LOVE, NERD, REJECT, SURPRISE, WAVE, THINKING or SIREN.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.rgbShowScrollingText">
+<span class="sig-name descname"><span class="pre">rgbShowScrollingText</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speed</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.rgbShowScrollingText" title="Permalink to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Show scrolling text on the NeoPixel RGB strip connected to Pin 21.</dt><dd><p>The text will scroll from right to left. The color parameter is a tuple with the RGB values.
+It will first clear the strip and then starts the scrolling text animation.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – The text to scroll from right to left.</p></li>
+<li><p><strong>color</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em>) – The color of the text. The tuple contains the RGB values. Each value must be between
+0 and 255. Example: (255, 0, 0) will display the text in red. (0, 255, 0) will display
+the text in green. (0, 0, 255) will display the text in blue.</p></li>
+<li><p><strong>speed</strong> (<em>int</em>) – <p>The speed of the scrolling text. The lower the value the faster the text will scroll.
+Some of the preset values are:</p>
+<blockquote>
+<div><p>SLOW = 1000</p>
+<p>MEDIUM = 600</p>
+<p>FAST = 300</p>
+</div></blockquote>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.rgbShowText">
+<span class="sig-name descname"><span class="pre">rgbShowText</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.rgbShowText" title="Permalink to this definition"></a></dt>
+<dd><p>Show text first character on the NeoPixel RGB strip connected to Pin 21.
+This function will only display only the first character of the text.
+It will first clear the strip and then draw the first character of the text.
+The color parameter is a tuple with the RGB values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – The text to display. Only the first character will be displayed.</p></li>
+<li><p><strong>color</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em>) – The color of the text. The tuple contains the RGB values. Each value must be between
+0 and 255. Example: (255, 0, 0) will display the text in red. (0, 255, 0) will display
+the text in green. (0, 0, 255) will display the text in blue.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.runMotor">
+<span class="sig-name descname"><span class="pre">runMotor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">motor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speed</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.runMotor" title="Permalink to this definition"></a></dt>
+<dd><p>Runs the motor on the robot in a specified direction at a specified speed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>motor</strong> (<em>int</em>) – The id or index of the motor. The id can be either MOTOR_LEFT = 0, MOTOR_RIGHT = 1 or MOTOR_BOTH = 2.</p></li>
+<li><p><strong>direction</strong> (<em>int</em>) – The direction in which the motor should run. The direction can be either FORWARD = 0 or BACKWARD = 1.</p></li>
+<li><p><strong>speed</strong> (<em>int</em>) – The speed at which the motor should run. The speed can be any value between 0 and 1023.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.setIRSensorThreshold">
+<span class="sig-name descname"><span class="pre">setIRSensorThreshold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.setIRSensorThreshold" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the threshold of the IR sensor.
+Threshold is the minimum analog reading/value of the IR sensor when it detects a black line.
+The default threshold is 2047. The threshold can be any value between 0 and 4095.
+If the analog reading of the IR sensor is greater than the threshold, it means that the IR sensor is active,
+i.e. it has detected a black line.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>int</em>) – The id or index of the IR sensor. The id can be either LEFT = 0 or RIGHT = 1.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.setMotorDirection">
+<span class="sig-name descname"><span class="pre">setMotorDirection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">motor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.setMotorDirection" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the direction of the motor rotation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>motor</strong> (<em>int</em>) – The id of the motor whose direction is to be set. The id can be either MOTOR_LEFT = 0, MOTOR_RIGHT = 1 or MOTOR_BOTH = 2.</p></li>
+<li><p><strong>direction</strong> (<em>int</em>) – The direction of the motor. The direction can be either FORWARD = 0 or BACKWARD = 1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.setMotorSpeed">
+<span class="sig-name descname"><span class="pre">setMotorSpeed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">motor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speed</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.setMotorSpeed" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the speed of the motor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>motor</strong> (<em>int</em>) – The id of the motor whose speed is to be set. The id can be either MOTOR_LEFT = 0, MOTOR_RIGHT = 1 or MOTOR_BOTH = 2.</p></li>
+<li><p><strong>speed</strong> (<em>int</em>) – The speed of the motor. The speed can be any value between 0 and 1023. This value is mapped to the duty cycle of the MCPWM signal.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.setServoAngle">
+<span class="sig-name descname"><span class="pre">setServoAngle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.setServoAngle" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the angle of the servo connected to the specified pin.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pin</strong> (<em>int</em>) – The pin number of the servo whose angle is to be set.</p></li>
+<li><p><strong>angle</strong> (<em>int</em>) – The angle of the servo. The angle can be any value between 0 and 180.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.setTempo">
+<span class="sig-name descname"><span class="pre">setTempo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bpm</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.setTempo" title="Permalink to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Set the tempo of the melody in beats per minute.</dt><dd><p>The default tempo is 169 BPM. The tempo is used to calculate the duration of each note in the melody.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>bpm</strong> (<em>int</em>) – The tempo of the melody in beats per minute.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.setUltrasonicPins">
+<span class="sig-name descname"><span class="pre">setUltrasonicPins</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">echo</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.setUltrasonicPins" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the trigger and echo pins for the ultrasonic sensor with the specified id or index to be connected to the specified pins.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>int</em>) – The id or index of the ultrasonic sensor to be connected. It can be either 0 or 1.</p></li>
+<li><p><strong>trig</strong> (<em>int</em>) – The trigger pin of the ultrasonic sensor.</p></li>
+<li><p><strong>echo</strong> (<em>int</em>) – The echo pin of the ultrasonic sensor.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.setVolume">
+<span class="sig-name descname"><span class="pre">setVolume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">volume</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.setVolume" title="Permalink to this definition"></a></dt>
+<dd><p>Set the volume of the speaker, for the playback of audio files. The volume can be set between 0 and 100.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>volume</strong> (<em>int</em>) – The volume to set the speaker to, between 0 and 100</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.showCopyright">
+<span class="sig-name descname"><span class="pre">showCopyright</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.showCopyright" title="Permalink to this definition"></a></dt>
+<dd><p>Displays the copyright notice of the library.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>None</strong> – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.showVersion">
+<span class="sig-name descname"><span class="pre">showVersion</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.showVersion" title="Permalink to this definition"></a></dt>
+<dd><p>Displays the version number of the library.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>None</strong> – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.speak">
+<span class="sig-name descname"><span class="pre">speak</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lang</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.speak" title="Permalink to this definition"></a></dt>
+<dd><p>Speak the given text in the specified language using the robot’s speaker.
+This function is blocking and will return only once it is done speaking the text.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – The text to spoken by the robot.</p></li>
+<li><p><strong>lang</strong> (<em>str</em>) – The language of the text, ex: ‘en-US’. The language specifies in which language the text is spoken.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.stopAudio">
+<span class="sig-name descname"><span class="pre">stopAudio</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.stopAudio" title="Permalink to this definition"></a></dt>
+<dd><p>Stop playing an audio file that is currently playing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>None</strong> – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.stopMotor">
+<span class="sig-name descname"><span class="pre">stopMotor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">motor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.stopMotor" title="Permalink to this definition"></a></dt>
+<dd><p>Stops the motor on the robot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>motor</strong> (<em>int</em>) – The id or index of the motor. The id can be either MOTOR_LEFT = 0, MOTOR_RIGHT = 1 or MOTOR_BOTH = 2.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.stopRobot">
+<span class="sig-name descname"><span class="pre">stopRobot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.stopRobot" title="Permalink to this definition"></a></dt>
+<dd><p>Stops the robot by setting the speed of both the left and right motors to 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>None</strong> – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.turnLeft">
+<span class="sig-name descname"><span class="pre">turnLeft</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.turnLeft" title="Permalink to this definition"></a></dt>
+<dd><p>Turns the robot left for a specified time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<em>int</em>) – The time in seconds for which the robot should turn left.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.turnRight">
+<span class="sig-name descname"><span class="pre">turnRight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.turnRight" title="Permalink to this definition"></a></dt>
+<dd><p>Turns the robot right for a specified time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<em>int</em>) – The time in seconds for which the robot should turn right.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.writeAnalogOutput">
+<span class="sig-name descname"><span class="pre">writeAnalogOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duty_cycle</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.writeAnalogOutput" title="Permalink to this definition"></a></dt>
+<dd><p>Writes the specified PWM duty cycle to the specified output pin.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pin</strong> (<em>int</em>) – The pin number of the analog output.
+The pin number can be either 25, 26, 27, 14, 12, 13, 15, 2, 4, 0, 23, 22, 21, 19, 18, 5, 17, 16.</p></li>
+<li><p><strong>duty_cycle</strong> (<em>int</em>) – The PWM duty cycle to be written to the specified output pin.
+The duty cycle can be any value between 0 and 1023.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.writeDigitalOutput">
+<span class="sig-name descname"><span class="pre">writeDigitalOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.writeDigitalOutput" title="Permalink to this definition"></a></dt>
+<dd><p>Writes the specified state HIGH or LOW to the specified output pin.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pin</strong> (<em>int</em>) – The pin number of the digital output.
+The pin number can be either 34, 35, 32, 33, 25, 26, 27, 14, 12, 13, 15, 2, 4, 0, 23, 22, 21, 19, 18, 5, 17, 16.
+You can also use the constants: D1 = 18, D2 = 19, D3 = 26</p></li>
+<li><p><strong>state</strong> (<em>int</em>) – The state to be written to the specified output pin. The state can be either 0 or 1. You can also use the constants: LOW = 0, HIGH = 1</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="avinya.startScratchMode">
+<span class="sig-prename descclassname"><span class="pre">avinya.</span></span><span class="sig-name descname"><span class="pre">startScratchMode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#avinya.startScratchMode" title="Permalink to this definition"></a></dt>
+<dd><p>Restarts the ESP32 board in Scratch mode, with Avinya Robotics Car Scratch Firmware.
+The robot will start listening for Scratch commands on the websocket port 80 and on the robot’s IP address at /car url path.
+You can check the Avinya Scratch extension at: <a class="reference external" href="https://ide.codeskool.cc/">https://ide.codeskool.cc/</a>
+You need to connect the CodeSkool Scratch app to the same WiFi network as the robot.
+In the Scratch app, you need to provide the IP address of the robot, so that it can connect to the robot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>None</strong> – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to Avinya’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Hacktronics India.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

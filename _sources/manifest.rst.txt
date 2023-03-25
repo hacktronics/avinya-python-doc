@@ -1,0 +1,7 @@
+manifest module
+===============
+
+.. automodule:: manifest
+   :members:
+   :undoc-members:
+   :show-inheritance:

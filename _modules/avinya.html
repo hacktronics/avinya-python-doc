@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>avinya &mdash; Avinya 0.0.1.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Avinya
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../avinya.html">avinya module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Avinya</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">avinya</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for avinya</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">machine</span> <span class="kn">import</span> <span class="n">ADC</span><span class="p">,</span> <span class="n">Pin</span><span class="p">,</span> <span class="n">PWM</span><span class="p">,</span> <span class="n">TouchPad</span>
+<span class="kn">import</span> <span class="nn">neopixel</span>
+<span class="kn">import</span> <span class="nn">uasyncio</span>
+<span class="kn">from</span> <span class="nn">hcsr04</span> <span class="kn">import</span> <span class="n">HCSR04</span>
+<span class="kn">from</span> <span class="nn">servo</span> <span class="kn">import</span> <span class="n">Servo</span>
+<span class="kn">from</span> <span class="nn">esp32</span> <span class="kn">import</span> <span class="n">MCPWM</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="c1">#CONSTANTS</span>
+<span class="n">HIGH</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">LOW</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">LEFT</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">RIGHT</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">FORWARD</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">BACKWARD</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">MOTOR_LEFT</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">MOTOR_RIGHT</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">MOTOR_BOTH</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">SLOW</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">MEDIUM</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">FAST</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">PWM_FREQUENCY</span> <span class="o">=</span> <span class="mi">5000</span>
+
+<span class="c1">#EMOTIONS</span>
+<span class="n">HAPPY</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">ANGRY</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">BASIC</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">CRYING</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">DISCO</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">GIGGLE</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">SUPERANGRY</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="n">LOVE</span> <span class="o">=</span> <span class="mi">7</span>
+<span class="n">NERD</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">REJECT</span> <span class="o">=</span> <span class="mi">9</span>
+<span class="n">SURPRISE</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">WAVE</span> <span class="o">=</span> <span class="mi">11</span>
+<span class="n">THINKING</span> <span class="o">=</span> <span class="mi">12</span>
+<span class="n">SIREN</span> <span class="o">=</span> <span class="mi">13</span>
+
+<span class="c1">#COLORS</span>
+<span class="n">RED_COLOR</span> <span class="o">=</span> <span class="p">(</span><span class="mh">0xFF</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">)</span>
+<span class="n">GREEN_COLOR</span> <span class="o">=</span> <span class="p">(</span><span class="mh">0x00</span><span class="p">,</span> <span class="mh">0xFF</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">)</span>
+<span class="n">BLUE_COLOR</span> <span class="o">=</span> <span class="p">(</span><span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0xFF</span><span class="p">)</span>
+<span class="n">PINK_COLOR</span> <span class="o">=</span> <span class="p">(</span><span class="mh">0xFF</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0xFF</span><span class="p">)</span>
+<span class="n">ORANGE_COLOR</span> <span class="o">=</span> <span class="p">(</span><span class="mh">0xFF</span><span class="p">,</span> <span class="mh">0xA5</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">)</span>
+<span class="n">DARKYELLOW_COLOR</span> <span class="o">=</span> <span class="p">(</span><span class="mh">0xFF</span><span class="p">,</span> <span class="mh">0xC8</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">)</span>
+<span class="n">CYAN_COLOR</span> <span class="o">=</span> <span class="p">(</span><span class="mh">0x00</span><span class="p">,</span> <span class="mh">0xFF</span><span class="p">,</span> <span class="mh">0xFF</span><span class="p">)</span>
+<span class="n">WHITE_COLOR</span> <span class="o">=</span> <span class="p">(</span><span class="mh">0xFF</span><span class="p">,</span> <span class="mh">0xFF</span><span class="p">,</span> <span class="mh">0xFF</span><span class="p">)</span>
+<span class="n">BLACK_COLOR</span> <span class="o">=</span> <span class="p">(</span><span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">)</span>
+<span class="n">LIMEGREEN_COLOR</span> <span class="o">=</span> <span class="p">(</span><span class="mh">0x00</span><span class="p">,</span> <span class="mh">0xC7</span><span class="p">,</span> <span class="mh">0x35</span><span class="p">)</span>
+<span class="n">DARKORANGE_COLOR</span> <span class="o">=</span> <span class="p">(</span><span class="mh">0xFF</span><span class="p">,</span> <span class="mh">0x8C</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">)</span>
+<span class="n">PURPLE_COLOR</span> <span class="o">=</span> <span class="p">(</span><span class="mh">0x80</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x80</span><span class="p">)</span>
+<span class="n">BLUEGREEN_COLOR</span> <span class="o">=</span> <span class="p">(</span><span class="mh">0x0C</span><span class="p">,</span> <span class="mh">0xBA</span><span class="p">,</span> <span class="mh">0xA6</span><span class="p">)</span>
+<span class="n">YELLOW_COLOR</span> <span class="o">=</span> <span class="p">(</span><span class="mh">0xFF</span><span class="p">,</span> <span class="mh">0xFF</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">)</span>
+<span class="n">AMBER_COLOR</span> <span class="o">=</span> <span class="p">(</span><span class="mh">0xFF</span><span class="p">,</span> <span class="mh">0xBF</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">)</span>
+<span class="n">BLUEWHITE_COLOR</span> <span class="o">=</span> <span class="p">(</span><span class="mh">0xF4</span><span class="p">,</span> <span class="mh">0xF5</span><span class="p">,</span> <span class="mh">0xFF</span><span class="p">)</span>
+
+<span class="c1">#PINS</span>
+<span class="n">D1</span> <span class="o">=</span> <span class="mi">18</span>
+<span class="n">D2</span> <span class="o">=</span> <span class="mi">19</span>
+<span class="n">D3</span> <span class="o">=</span> <span class="mi">26</span>
+<span class="n">A1</span> <span class="o">=</span> <span class="mi">33</span>
+<span class="n">A2</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="n">A3</span> <span class="o">=</span> <span class="mi">39</span>
+<span class="n">T1</span> <span class="o">=</span> <span class="mi">15</span>
+<span class="n">T2</span> <span class="o">=</span> <span class="mi">13</span>
+<span class="n">T3</span> <span class="o">=</span> <span class="mi">12</span>
+<span class="n">T4</span> <span class="o">=</span> <span class="mi">14</span>
+<span class="n">T5</span> <span class="o">=</span> <span class="mi">27</span>
+<span class="n">SERVO1</span> <span class="o">=</span> <span class="mi">22</span>
+<span class="n">SERVO2</span> <span class="o">=</span> <span class="mi">23</span>
+<span class="n">NEOPIXEL_PIN</span> <span class="o">=</span> <span class="mi">21</span>
+<span class="n">MOTOR_A_IN1</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">MOTOR_A_IN2</span> <span class="o">=</span> <span class="mi">17</span>
+<span class="n">MOTOR_B_IN1</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">MOTOR_B_IN2</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="n">LEFT_IR_PIN</span> <span class="o">=</span> <span class="mi">34</span>
+<span class="n">RIGHT_IR_PIN</span> <span class="o">=</span> <span class="mi">35</span>
+<span class="n">BUTTON_ANALOG_PIN</span> <span class="o">=</span> <span class="mi">36</span>
+<span class="n">DAC_AUDIO_PIN</span> <span class="o">=</span> <span class="mi">25</span>
+
+<span class="c1">#THRESHOLDS</span>
+<span class="n">TOUCH_THRESHOLD</span> <span class="o">=</span> <span class="mi">300</span>
+<span class="n">RIGHT_BUTTON_THRESHOLD</span> <span class="o">=</span> <span class="mi">1400</span>
+<span class="n">LEFT_BUTTON_THRESHOLD</span> <span class="o">=</span> <span class="mi">600</span>
+
+<span class="c1">#GLOBAL VARIABLES</span>
+<span class="n">leftIRSensorThreshold</span> <span class="o">=</span> <span class="mi">2047</span>
+<span class="n">rightIRSensorThreshold</span> <span class="o">=</span> <span class="mi">2047</span>
+<span class="n">ultrasonic_sensors</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+<span class="n">servos</span> <span class="o">=</span> <span class="p">{</span><span class="n">SERVO1</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="n">SERVO2</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+
+<span class="n">motorASpeed</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">motorBSpeed</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">rgbBrightness</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">np</span> <span class="o">=</span> <span class="n">neopixel</span><span class="o">.</span><span class="n">NeoPixel</span><span class="p">(</span><span class="n">Pin</span><span class="p">(</span><span class="n">NEOPIXEL_PIN</span><span class="p">),</span> <span class="p">(</span><span class="mi">7</span><span class="o">*</span><span class="mi">5</span><span class="p">))</span>
+
+<span class="n">motorAIN1</span> <span class="o">=</span> <span class="n">MCPWM</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>                  <span class="c1"># Create MCPWM object with timer ID (0..5)</span>
+<span class="n">motorAIN1</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">Pin</span><span class="p">(</span><span class="n">MOTOR_A_IN1</span><span class="p">))</span>      <span class="c1"># Bind to output Pin. Output starts immediately.</span>
+<span class="n">motorAIN1</span><span class="o">.</span><span class="n">freq</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>                  <span class="c1"># Set frequency in Hz</span>
+<span class="n">motorAIN1</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>                     <span class="c1"># Set duty in percent</span>
+
+<span class="n">motorAIN2</span> <span class="o">=</span> <span class="n">MCPWM</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>                  <span class="c1"># Create MCPWM object with timer ID (0..5)</span>
+<span class="n">motorAIN2</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">Pin</span><span class="p">(</span><span class="n">MOTOR_A_IN2</span><span class="p">))</span>      <span class="c1"># Bind to output Pin. Output starts immediately.</span>
+<span class="n">motorAIN2</span><span class="o">.</span><span class="n">freq</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>                  <span class="c1"># Set frequency in Hz</span>
+<span class="n">motorAIN2</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>                     <span class="c1"># Set duty in percent</span>
+
+<span class="n">motorBIN1</span> <span class="o">=</span> <span class="n">MCPWM</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>                  <span class="c1"># Create MCPWM object with timer ID (0..5)</span>
+<span class="n">motorBIN1</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">Pin</span><span class="p">(</span><span class="n">MOTOR_B_IN1</span><span class="p">))</span>      <span class="c1"># Bind to output Pin. Output starts immediately.</span>
+<span class="n">motorBIN1</span><span class="o">.</span><span class="n">freq</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>                  <span class="c1"># Set frequency in Hz</span>
+<span class="n">motorBIN1</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>                     <span class="c1"># Set duty in percent</span>
+
+<span class="n">motorBIN2</span> <span class="o">=</span> <span class="n">MCPWM</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>                  <span class="c1"># Create MCPWM object with timer ID (0..5)</span>
+<span class="n">motorBIN2</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">Pin</span><span class="p">(</span><span class="n">MOTOR_B_IN2</span><span class="p">))</span>      <span class="c1"># Bind to output Pin. Output starts immediately.</span>
+<span class="n">motorBIN2</span><span class="o">.</span><span class="n">freq</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>                  <span class="c1"># Set frequency in Hz</span>
+<span class="n">motorBIN2</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>                     <span class="c1"># Set duty in percent</span>
+
+<div class="viewcode-block" id="avinya"><a class="viewcode-back" href="../avinya.html#avinya.avinya">[docs]</a><span class="k">class</span> <span class="nc">avinya</span><span class="p">:</span>
+<div class="viewcode-block" id="avinya.copyright"><a class="viewcode-back" href="../avinya.html#avinya.avinya.copyright">[docs]</a>  <span class="k">def</span> <span class="nf">copyright</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Displays the copyright notice.&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Copyright © 2023 Hacktronics India. All rights reserved.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="avinya.version"><a class="viewcode-back" href="../avinya.html#avinya.avinya.version">[docs]</a>  <span class="k">def</span> <span class="nf">version</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Displays the version number.&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Version: 0.0.1.0&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="avinya.readDigitalInput"><a class="viewcode-back" href="../avinya.html#avinya.avinya.readDigitalInput">[docs]</a>  <span class="k">def</span> <span class="nf">readDigitalInput</span><span class="p">(</span><span class="n">pin</span><span class="p">):</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">Pin</span><span class="p">(</span><span class="n">pin</span><span class="p">,</span> <span class="n">Pin</span><span class="o">.</span><span class="n">IN</span><span class="p">,</span> <span class="n">Pin</span><span class="o">.</span><span class="n">PULL_DOWN</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">p</span><span class="o">.</span><span class="n">value</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="avinya.writeDigitalOutput"><a class="viewcode-back" href="../avinya.html#avinya.avinya.writeDigitalOutput">[docs]</a>  <span class="k">def</span> <span class="nf">writeDigitalOutput</span><span class="p">(</span><span class="n">pin</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">Pin</span><span class="p">(</span><span class="n">pin</span><span class="p">,</span> <span class="n">Pin</span><span class="o">.</span><span class="n">OUT</span><span class="p">)</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">state</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="avinya.readAnalogInput"><a class="viewcode-back" href="../avinya.html#avinya.avinya.readAnalogInput">[docs]</a>  <span class="k">def</span> <span class="nf">readAnalogInput</span><span class="p">(</span><span class="n">pin</span><span class="p">):</span>
+    <span class="n">pot</span> <span class="o">=</span> <span class="n">ADC</span><span class="p">(</span><span class="n">Pin</span><span class="p">(</span><span class="n">pin</span><span class="p">))</span>
+    <span class="n">pot</span><span class="o">.</span><span class="n">atten</span><span class="p">(</span><span class="n">ADC</span><span class="o">.</span><span class="n">ATTN_11DB</span><span class="p">)</span>
+    <span class="n">pot</span><span class="o">.</span><span class="n">width</span><span class="p">(</span><span class="n">ADC</span><span class="o">.</span><span class="n">WIDTH_12BIT</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pot</span><span class="o">.</span><span class="n">read</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="avinya.writeAnalogOutput"><a class="viewcode-back" href="../avinya.html#avinya.avinya.writeAnalogOutput">[docs]</a>  <span class="k">def</span> <span class="nf">writeAnalogOutput</span><span class="p">(</span><span class="n">pin</span><span class="p">,</span> <span class="n">duty_cycle</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">duty_cycle</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+      <span class="n">duty_cycle</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">duty_cycle</span> <span class="o">&gt;</span> <span class="mi">1023</span><span class="p">:</span>
+      <span class="n">duty_cycle</span> <span class="o">=</span> <span class="mi">1023</span>
+    <span class="n">led</span> <span class="o">=</span> <span class="n">PWM</span><span class="p">(</span><span class="n">Pin</span><span class="p">(</span><span class="n">pin</span><span class="p">),</span> <span class="n">PWM_FREQUENCY</span><span class="p">)</span>
+    <span class="n">led</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="n">duty_cycle</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="avinya.isPadTouched"><a class="viewcode-back" href="../avinya.html#avinya.avinya.isPadTouched">[docs]</a>  <span class="k">def</span> <span class="nf">isPadTouched</span><span class="p">(</span><span class="n">pin</span><span class="p">):</span>
+    <span class="n">touch_pin</span> <span class="o">=</span> <span class="n">TouchPad</span><span class="p">(</span><span class="n">Pin</span><span class="p">(</span><span class="n">pin</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">Pin</span><span class="o">.</span><span class="n">IN</span><span class="p">))</span>
+    <span class="n">touch_value</span> <span class="o">=</span> <span class="n">touch_pin</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">touch_value</span> <span class="o">&lt;</span> <span class="n">TOUCH_THRESHOLD</span></div>
+  
+<div class="viewcode-block" id="avinya.setUltrasonicPins"><a class="viewcode-back" href="../avinya.html#avinya.avinya.setUltrasonicPins">[docs]</a>  <span class="k">def</span> <span class="nf">setUltrasonicPins</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">trig</span><span class="p">,</span> <span class="n">echo</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">ultrasonic_sensors</span>
+    <span class="n">ultrasonic_sensors</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">HCSR04</span><span class="p">(</span><span class="n">trigger_pin</span><span class="o">=</span><span class="n">trig</span><span class="p">,</span> <span class="n">echo_pin</span><span class="o">=</span><span class="n">echo</span><span class="p">,</span> <span class="n">echo_timeout_us</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="avinya.getDistance"><a class="viewcode-back" href="../avinya.html#avinya.avinya.getDistance">[docs]</a>  <span class="k">def</span> <span class="nf">getDistance</span><span class="p">(</span><span class="nb">id</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">ultrasonic_sensors</span>
+    <span class="k">if</span> <span class="n">ultrasonic_sensors</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+      <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">return</span> <span class="n">ultrasonic_sensors</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span><span class="o">.</span><span class="n">distance_mm</span><span class="p">()</span></div>
+  
+<div class="viewcode-block" id="avinya.isButtonPressed"><a class="viewcode-back" href="../avinya.html#avinya.avinya.isButtonPressed">[docs]</a>  <span class="k">def</span> <span class="nf">isButtonPressed</span><span class="p">(</span><span class="n">button</span><span class="p">):</span>
+    <span class="n">pot</span> <span class="o">=</span> <span class="n">ADC</span><span class="p">(</span><span class="n">Pin</span><span class="p">(</span><span class="n">BUTTON_ANALOG_PIN</span><span class="p">))</span>
+    <span class="n">pot</span><span class="o">.</span><span class="n">atten</span><span class="p">(</span><span class="n">ADC</span><span class="o">.</span><span class="n">ATTN_11DB</span><span class="p">)</span>
+    <span class="n">pot</span><span class="o">.</span><span class="n">width</span><span class="p">(</span><span class="n">ADC</span><span class="o">.</span><span class="n">WIDTH_12BIT</span><span class="p">)</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="n">pot</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">button</span> <span class="o">==</span> <span class="n">LEFT</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">val</span> <span class="o">&gt;</span> <span class="n">LEFT_BUTTON_THRESHOLD</span> <span class="ow">and</span> <span class="n">val</span> <span class="o">&lt;</span> <span class="n">RIGHT_BUTTON_THRESHOLD</span>
+    <span class="k">elif</span> <span class="n">button</span> <span class="o">==</span> <span class="n">RIGHT</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">val</span> <span class="o">&gt;</span> <span class="n">RIGHT_BUTTON_THRESHOLD</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">return</span> <span class="kc">False</span></div>
+    
+<div class="viewcode-block" id="avinya.readButtonState"><a class="viewcode-back" href="../avinya.html#avinya.avinya.readButtonState">[docs]</a>  <span class="k">def</span> <span class="nf">readButtonState</span><span class="p">(</span><span class="n">pin</span><span class="p">):</span>
+    <span class="n">button</span> <span class="o">=</span> <span class="n">Pin</span><span class="p">(</span><span class="n">pin</span><span class="p">,</span> <span class="n">Pin</span><span class="o">.</span><span class="n">IN</span><span class="p">,</span> <span class="n">Pin</span><span class="o">.</span><span class="n">PULL_UP</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">button</span><span class="o">.</span><span class="n">value</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="avinya.setIRSensorThreshold"><a class="viewcode-back" href="../avinya.html#avinya.avinya.setIRSensorThreshold">[docs]</a>  <span class="k">def</span> <span class="nf">setIRSensorThreshold</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">threshold</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">leftIRSensorThreshold</span>
+    <span class="k">global</span> <span class="n">rightIRSensorThreshold</span>
+    <span class="k">if</span> <span class="nb">id</span> <span class="o">==</span> <span class="n">LEFT</span><span class="p">:</span>
+      <span class="n">leftIRSensorThreshold</span> <span class="o">=</span> <span class="n">threshold</span>
+    <span class="k">elif</span> <span class="nb">id</span> <span class="o">==</span> <span class="n">RIGHT</span><span class="p">:</span>
+      <span class="n">rightIRSensorThreshold</span> <span class="o">=</span> <span class="n">threshold</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="avinya.isIRSensorActive"><a class="viewcode-back" href="../avinya.html#avinya.avinya.isIRSensorActive">[docs]</a>  <span class="k">def</span> <span class="nf">isIRSensorActive</span><span class="p">(</span><span class="nb">id</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">leftIRSensorThreshold</span>
+    <span class="k">global</span> <span class="n">rightIRSensorThreshold</span>
+    <span class="k">if</span> <span class="nb">id</span> <span class="o">==</span> <span class="n">LEFT</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">avinya</span><span class="o">.</span><span class="n">readAnalogInput</span><span class="p">(</span><span class="n">LEFT_IR_PIN</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">leftIRSensorThreshold</span>
+    <span class="k">elif</span> <span class="nb">id</span> <span class="o">==</span> <span class="n">RIGHT</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">avinya</span><span class="o">.</span><span class="n">readAnalogInput</span><span class="p">(</span><span class="n">RIGHT_IR_PIN</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">rightIRSensorThreshold</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">return</span> <span class="kc">False</span></div>
+    
+<div class="viewcode-block" id="avinya.getIRSensorValue"><a class="viewcode-back" href="../avinya.html#avinya.avinya.getIRSensorValue">[docs]</a>  <span class="k">def</span> <span class="nf">getIRSensorValue</span><span class="p">(</span><span class="nb">id</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">id</span> <span class="o">==</span> <span class="n">LEFT</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">avinya</span><span class="o">.</span><span class="n">readAnalogInput</span><span class="p">(</span><span class="n">LEFT_IR_PIN</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">id</span> <span class="o">==</span> <span class="n">RIGHT</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">avinya</span><span class="o">.</span><span class="n">readAnalogInput</span><span class="p">(</span><span class="n">RIGHT_IR_PIN</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">return</span> <span class="mi">0</span></div>
+
+<div class="viewcode-block" id="avinya.setServoAngle"><a class="viewcode-back" href="../avinya.html#avinya.avinya.setServoAngle">[docs]</a>  <span class="k">def</span> <span class="nf">setServoAngle</span><span class="p">(</span><span class="n">pin</span><span class="p">,</span> <span class="n">angle</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">servos</span>
+    <span class="k">if</span> <span class="n">servos</span><span class="p">[</span><span class="n">pin</span><span class="p">]</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+      <span class="n">servos</span><span class="p">[</span><span class="n">pin</span><span class="p">]</span> <span class="o">=</span> <span class="n">Servo</span><span class="p">(</span><span class="n">pin</span><span class="p">)</span>
+    <span class="n">servos</span><span class="p">[</span><span class="n">pin</span><span class="p">]</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="avinya.stopRobot"><a class="viewcode-back" href="../avinya.html#avinya.avinya.stopRobot">[docs]</a>  <span class="k">def</span> <span class="nf">stopRobot</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">motorAIN1</span><span class="p">,</span> <span class="n">motorAIN2</span><span class="p">,</span> <span class="n">motorBIN1</span><span class="p">,</span> <span class="n">motorBIN2</span>
+    <span class="n">motorAIN1</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">motorAIN2</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">motorBIN1</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">motorBIN2</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="avinya.setMotorSpeed"><a class="viewcode-back" href="../avinya.html#avinya.avinya.setMotorSpeed">[docs]</a>  <span class="k">def</span> <span class="nf">setMotorSpeed</span><span class="p">(</span><span class="n">motor</span><span class="p">,</span> <span class="n">speed</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">motorAIN1</span><span class="p">,</span> <span class="n">motorAIN2</span><span class="p">,</span> <span class="n">motorBIN1</span><span class="p">,</span> <span class="n">motorBIN2</span><span class="p">,</span> <span class="n">motorASpeed</span><span class="p">,</span> <span class="n">motorBSpeed</span>
+    <span class="k">if</span> <span class="n">motor</span> <span class="o">==</span> <span class="n">MOTOR_LEFT</span><span class="p">:</span>
+      <span class="n">motorASpeed</span> <span class="o">=</span> <span class="n">speed</span>
+    <span class="k">elif</span> <span class="n">motor</span> <span class="o">==</span> <span class="n">MOTOR_RIGHT</span><span class="p">:</span>
+      <span class="n">motorBSpeed</span> <span class="o">=</span> <span class="n">speed</span>
+    <span class="k">elif</span> <span class="n">motor</span> <span class="o">==</span> <span class="n">MOTOR_BOTH</span><span class="p">:</span>
+      <span class="n">motorASpeed</span> <span class="o">=</span> <span class="n">speed</span>
+      <span class="n">motorBSpeed</span> <span class="o">=</span> <span class="n">speed</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="avinya.setMotorDirection"><a class="viewcode-back" href="../avinya.html#avinya.avinya.setMotorDirection">[docs]</a>  <span class="k">def</span> <span class="nf">setMotorDirection</span><span class="p">(</span><span class="n">motor</span><span class="p">,</span> <span class="n">direction</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">motorAIN1</span><span class="p">,</span> <span class="n">motorAIN2</span><span class="p">,</span> <span class="n">motorBIN1</span><span class="p">,</span> <span class="n">motorBIN2</span><span class="p">,</span> <span class="n">motorASpeed</span><span class="p">,</span> <span class="n">motorBSpeed</span>
+    <span class="k">if</span> <span class="n">motor</span> <span class="o">==</span> <span class="n">MOTOR_LEFT</span><span class="p">:</span>
+      <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="n">FORWARD</span><span class="p">:</span>
+        <span class="n">motorAIN1</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="n">motorASpeed</span><span class="p">)</span>
+        <span class="n">motorAIN2</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+      <span class="k">elif</span> <span class="n">direction</span> <span class="o">==</span> <span class="n">BACKWARD</span><span class="p">:</span>
+        <span class="n">motorAIN1</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">motorAIN2</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="n">motorASpeed</span><span class="p">)</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">elif</span> <span class="n">motor</span> <span class="o">==</span> <span class="n">MOTOR_RIGHT</span><span class="p">:</span>
+      <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="n">FORWARD</span><span class="p">:</span>
+        <span class="n">motorBIN1</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="n">motorBSpeed</span><span class="p">)</span>
+        <span class="n">motorBIN2</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+      <span class="k">elif</span> <span class="n">direction</span> <span class="o">==</span> <span class="n">BACKWARD</span><span class="p">:</span>
+        <span class="n">motorBIN1</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">motorBIN2</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="n">motorBSpeed</span><span class="p">)</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">elif</span> <span class="n">motor</span> <span class="o">==</span> <span class="n">MOTOR_BOTH</span><span class="p">:</span>
+      <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="n">FORWARD</span><span class="p">:</span>
+        <span class="n">motorAIN1</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="n">motorASpeed</span><span class="p">)</span>
+        <span class="n">motorAIN2</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">motorBIN1</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="n">motorBSpeed</span><span class="p">)</span>
+        <span class="n">motorBIN2</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+      <span class="k">elif</span> <span class="n">direction</span> <span class="o">==</span> <span class="n">BACKWARD</span><span class="p">:</span>
+        <span class="n">motorAIN1</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">motorAIN2</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="n">motorASpeed</span><span class="p">)</span>
+        <span class="n">motorBIN1</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">motorBIN2</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="n">motorBSpeed</span><span class="p">)</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="avinya.moveForward"><a class="viewcode-back" href="../avinya.html#avinya.avinya.moveForward">[docs]</a>  <span class="k">def</span> <span class="nf">moveForward</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">motorAIN1</span><span class="p">,</span> <span class="n">motorAIN2</span><span class="p">,</span> <span class="n">motorBIN1</span><span class="p">,</span> <span class="n">motorBIN2</span><span class="p">,</span> <span class="n">motorASpeed</span><span class="p">,</span> <span class="n">motorBSpeed</span>
+    <span class="n">motorAIN1</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="n">motorASpeed</span><span class="p">)</span>
+    <span class="n">motorAIN2</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">motorBIN1</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="n">motorBSpeed</span><span class="p">)</span>
+    <span class="n">motorBIN2</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="n">avinya</span><span class="o">.</span><span class="n">stopRobot</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="avinya.moveBackward"><a class="viewcode-back" href="../avinya.html#avinya.avinya.moveBackward">[docs]</a>  <span class="k">def</span> <span class="nf">moveBackward</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">motorAIN1</span><span class="p">,</span> <span class="n">motorAIN2</span><span class="p">,</span> <span class="n">motorBIN1</span><span class="p">,</span> <span class="n">motorBIN2</span><span class="p">,</span> <span class="n">motorASpeed</span><span class="p">,</span> <span class="n">motorBSpeed</span>
+    <span class="n">motorAIN1</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">motorAIN2</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="n">motorASpeed</span><span class="p">)</span>
+    <span class="n">motorBIN1</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">motorBIN2</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="n">motorBSpeed</span><span class="p">)</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="n">avinya</span><span class="o">.</span><span class="n">stopRobot</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="avinya.turnLeft"><a class="viewcode-back" href="../avinya.html#avinya.avinya.turnLeft">[docs]</a>  <span class="k">def</span> <span class="nf">turnLeft</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">motorAIN1</span><span class="p">,</span> <span class="n">motorAIN2</span><span class="p">,</span> <span class="n">motorBIN1</span><span class="p">,</span> <span class="n">motorBIN2</span><span class="p">,</span> <span class="n">motorASpeed</span><span class="p">,</span> <span class="n">motorBSpeed</span>
+    <span class="n">motorAIN1</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">motorAIN2</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="n">motorASpeed</span><span class="p">)</span>
+    <span class="n">motorBIN1</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="n">motorBSpeed</span><span class="p">)</span>
+    <span class="n">motorBIN2</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="n">avinya</span><span class="o">.</span><span class="n">stopRobot</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="avinya.turnRight"><a class="viewcode-back" href="../avinya.html#avinya.avinya.turnRight">[docs]</a>  <span class="k">def</span> <span class="nf">turnRight</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">motorAIN1</span><span class="p">,</span> <span class="n">motorAIN2</span><span class="p">,</span> <span class="n">motorBIN1</span><span class="p">,</span> <span class="n">motorBIN2</span><span class="p">,</span> <span class="n">motorASpeed</span><span class="p">,</span> <span class="n">motorBSpeed</span>
+    <span class="n">motorAIN1</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="n">motorASpeed</span><span class="p">)</span>
+    <span class="n">motorAIN2</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">motorBIN1</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">motorBIN2</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="n">motorBSpeed</span><span class="p">)</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="n">avinya</span><span class="o">.</span><span class="n">stopRobot</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="avinya.stopMotor"><a class="viewcode-back" href="../avinya.html#avinya.avinya.stopMotor">[docs]</a>  <span class="k">def</span> <span class="nf">stopMotor</span><span class="p">(</span><span class="n">motor</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">motorAIN1</span><span class="p">,</span> <span class="n">motorAIN2</span><span class="p">,</span> <span class="n">motorBIN1</span><span class="p">,</span> <span class="n">motorBIN2</span>
+    <span class="k">if</span> <span class="n">motor</span> <span class="o">==</span> <span class="n">MOTOR_LEFT</span><span class="p">:</span>
+      <span class="n">motorAIN1</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+      <span class="n">motorAIN2</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">motor</span> <span class="o">==</span> <span class="n">MOTOR_RIGHT</span><span class="p">:</span>
+      <span class="n">motorBIN1</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+      <span class="n">motorBIN2</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">motor</span> <span class="o">==</span> <span class="n">MOTOR_BOTH</span><span class="p">:</span>
+      <span class="n">motorAIN1</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+      <span class="n">motorAIN2</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+      <span class="n">motorBIN1</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+      <span class="n">motorBIN2</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="avinya.runMotor"><a class="viewcode-back" href="../avinya.html#avinya.avinya.runMotor">[docs]</a>  <span class="k">def</span> <span class="nf">runMotor</span><span class="p">(</span><span class="n">motor</span><span class="p">,</span> <span class="n">direction</span><span class="p">,</span> <span class="n">speed</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">motorAIN1</span><span class="p">,</span> <span class="n">motorAIN2</span><span class="p">,</span> <span class="n">motorBIN1</span><span class="p">,</span> <span class="n">motorBIN2</span><span class="p">,</span> <span class="n">motorASpeed</span><span class="p">,</span> <span class="n">motorBSpeed</span>
+    <span class="k">if</span> <span class="n">motor</span> <span class="o">==</span> <span class="n">MOTOR_LEFT</span><span class="p">:</span>
+      <span class="n">motorASpeed</span> <span class="o">=</span> <span class="n">speed</span>
+      <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="n">FORWARD</span><span class="p">:</span>
+        <span class="n">motorAIN1</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="n">speed</span><span class="p">)</span>
+        <span class="n">motorAIN2</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+      <span class="k">elif</span> <span class="n">direction</span> <span class="o">==</span> <span class="n">BACKWARD</span><span class="p">:</span>
+        <span class="n">motorAIN1</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">motorAIN2</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="n">speed</span><span class="p">)</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">elif</span> <span class="n">motor</span> <span class="o">==</span> <span class="n">MOTOR_RIGHT</span><span class="p">:</span>
+      <span class="n">motorBSpeed</span> <span class="o">=</span> <span class="n">speed</span>
+      <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="n">FORWARD</span><span class="p">:</span>
+        <span class="n">motorBIN1</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="n">speed</span><span class="p">)</span>
+        <span class="n">motorBIN2</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+      <span class="k">elif</span> <span class="n">direction</span> <span class="o">==</span> <span class="n">BACKWARD</span><span class="p">:</span>
+        <span class="n">motorBIN1</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">motorBIN2</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="n">speed</span><span class="p">)</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">elif</span> <span class="n">motor</span> <span class="o">==</span> <span class="n">MOTOR_BOTH</span><span class="p">:</span>
+      <span class="n">motorASpeed</span> <span class="o">=</span> <span class="n">speed</span>
+      <span class="n">motorBSpeed</span> <span class="o">=</span> <span class="n">speed</span>
+      <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="n">FORWARD</span><span class="p">:</span>
+        <span class="n">motorAIN1</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="n">speed</span><span class="p">)</span>
+        <span class="n">motorAIN2</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">motorBIN1</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="n">speed</span><span class="p">)</span>
+        <span class="n">motorBIN2</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+      <span class="k">elif</span> <span class="n">direction</span> <span class="o">==</span> <span class="n">BACKWARD</span><span class="p">:</span>
+        <span class="n">motorAIN1</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">motorAIN2</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="n">speed</span><span class="p">)</span>
+        <span class="n">motorBIN1</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">motorBIN2</span><span class="o">.</span><span class="n">duty</span><span class="p">(</span><span class="n">speed</span><span class="p">)</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">pass</span></div>
+
+  <span class="k">def</span> <span class="nf">_changeColorBrightness</span><span class="p">(</span><span class="n">color</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">rgbBrightness</span>
+    <span class="k">return</span> <span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="n">color</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">rgbBrightness</span><span class="p">)</span><span class="o">/</span><span class="mi">100</span><span class="p">),</span> <span class="nb">int</span><span class="p">((</span><span class="n">color</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">rgbBrightness</span><span class="p">)</span><span class="o">/</span><span class="mi">100</span><span class="p">),</span> <span class="nb">int</span><span class="p">((</span><span class="n">color</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">rgbBrightness</span><span class="p">)</span><span class="o">/</span><span class="mi">100</span><span class="p">))</span>
+
+<div class="viewcode-block" id="avinya.rgbDrawPattern"><a class="viewcode-back" href="../avinya.html#avinya.avinya.rgbDrawPattern">[docs]</a>  <span class="k">def</span> <span class="nf">rgbDrawPattern</span><span class="p">(</span><span class="n">pattern</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">np</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pattern</span><span class="p">:</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span><span class="p">):</span>
+        <span class="n">np</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLACK_COLOR</span><span class="p">)</span>
+      <span class="k">elif</span> <span class="p">(</span><span class="n">p</span> <span class="o">==</span> <span class="s1">&#39;1&#39;</span><span class="p">):</span>
+        <span class="n">np</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">WHITE_COLOR</span><span class="p">)</span>
+      <span class="k">elif</span> <span class="p">(</span><span class="n">p</span> <span class="o">==</span> <span class="s1">&#39;R&#39;</span><span class="p">):</span>
+        <span class="n">np</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="k">elif</span> <span class="p">(</span><span class="n">p</span> <span class="o">==</span> <span class="s1">&#39;G&#39;</span><span class="p">):</span>
+        <span class="n">np</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">GREEN_COLOR</span><span class="p">)</span>
+      <span class="k">elif</span> <span class="p">(</span><span class="n">p</span> <span class="o">==</span> <span class="s1">&#39;B&#39;</span><span class="p">):</span>
+        <span class="n">np</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="k">elif</span> <span class="p">(</span><span class="n">p</span> <span class="o">==</span> <span class="s1">&#39;O&#39;</span><span class="p">):</span>
+        <span class="n">np</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">ORANGE_COLOR</span><span class="p">)</span>
+      <span class="k">elif</span> <span class="p">(</span><span class="n">p</span> <span class="o">==</span> <span class="s1">&#39;Y&#39;</span><span class="p">):</span>
+        <span class="n">np</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">DARKYELLOW_COLOR</span><span class="p">)</span>
+      <span class="k">elif</span> <span class="p">(</span><span class="n">p</span> <span class="o">==</span> <span class="s1">&#39;P&#39;</span><span class="p">):</span>
+        <span class="n">np</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">PINK_COLOR</span><span class="p">)</span>
+      <span class="k">elif</span> <span class="p">(</span><span class="n">p</span> <span class="o">==</span> <span class="s1">&#39;L&#39;</span><span class="p">):</span>
+        <span class="n">np</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">LIMEGREEN_COLOR</span><span class="p">)</span>
+      <span class="k">elif</span> <span class="p">(</span><span class="n">p</span> <span class="o">==</span> <span class="s1">&#39;C&#39;</span><span class="p">):</span>
+        <span class="n">np</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">CYAN_COLOR</span><span class="p">)</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="k">pass</span>
+      <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">write</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="avinya.rgbSetBrightness"><a class="viewcode-back" href="../avinya.html#avinya.avinya.rgbSetBrightness">[docs]</a>  <span class="k">def</span> <span class="nf">rgbSetBrightness</span><span class="p">(</span><span class="n">brightness</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">rgbBrightness</span>
+    <span class="n">rgbBrightness</span> <span class="o">=</span> <span class="n">brightness</span></div>
+
+<div class="viewcode-block" id="avinya.rgbSetPixelColor"><a class="viewcode-back" href="../avinya.html#avinya.avinya.rgbSetPixelColor">[docs]</a>  <span class="k">def</span> <span class="nf">rgbSetPixelColor</span><span class="p">(</span><span class="n">pixel</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">np</span>
+    <span class="n">np</span><span class="p">[</span><span class="n">pixel</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">write</span><span class="p">()</span></div>
+  
+<div class="viewcode-block" id="avinya.rgbClearDisplay"><a class="viewcode-back" href="../avinya.html#avinya.avinya.rgbClearDisplay">[docs]</a>  <span class="k">def</span> <span class="nf">rgbClearDisplay</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">np</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">fill</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">write</span><span class="p">()</span></div>
+  
+<div class="viewcode-block" id="avinya.rgbClearPixel"><a class="viewcode-back" href="../avinya.html#avinya.avinya.rgbClearPixel">[docs]</a>  <span class="k">def</span> <span class="nf">rgbClearPixel</span><span class="p">(</span><span class="n">pixel</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">np</span>
+    <span class="n">np</span><span class="p">[</span><span class="n">pixel</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">write</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="avinya.rgbShowEmotion"><a class="viewcode-back" href="../avinya.html#avinya.avinya.rgbShowEmotion">[docs]</a>  <span class="k">def</span> <span class="nf">rgbShowEmotion</span><span class="p">(</span><span class="n">emotion</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">np</span>
+    <span class="k">if</span> <span class="n">emotion</span> <span class="o">==</span> <span class="n">HAPPY</span><span class="p">:</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">fill</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">13</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">16</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">18</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">19</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">22</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">23</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">25</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">26</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">emotion</span> <span class="o">==</span> <span class="n">ANGRY</span><span class="p">:</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">fill</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">14</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">DARKORANGE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">DARKORANGE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">21</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">DARKORANGE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">27</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">DARKORANGE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">19</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">22</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">26</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">emotion</span> <span class="o">==</span> <span class="n">BASIC</span><span class="p">:</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">fill</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">14</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">16</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">18</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">19</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">21</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">22</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">23</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">25</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">26</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">27</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">28</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">29</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">30</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">32</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">33</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">34</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">emotion</span> <span class="o">==</span> <span class="n">CRYING</span><span class="p">:</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">fill</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">PURPLE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">PURPLE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">PURPLE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">PURPLE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">PURPLE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">PURPLE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">PURPLE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">PURPLE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">14</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">PURPLE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">18</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">PURPLE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">13</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUEGREEN_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">16</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">19</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUEGREEN_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">22</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUEGREEN_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">26</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUEGREEN_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">29</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUEGREEN_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">33</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUEGREEN_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">emotion</span> <span class="o">==</span> <span class="n">DISCO</span><span class="p">:</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">fill</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUEGREEN_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUEGREEN_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUEGREEN_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">14</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUEGREEN_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUEGREEN_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">16</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">GREEN_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">DARKORANGE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">DARKORANGE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">DARKORANGE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">12</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">13</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">18</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">19</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">PURPLE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">emotion</span> <span class="o">==</span> <span class="n">GIGGLE</span><span class="p">:</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">fill</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">PURPLE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">12</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">PURPLE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">14</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">PURPLE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">16</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">PURPLE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">18</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">PURPLE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">19</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">PURPLE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">21</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">23</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">25</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">27</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">emotion</span> <span class="o">==</span> <span class="n">SUPERANGRY</span><span class="p">:</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">fill</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">12</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">16</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">18</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">21</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">DARKORANGE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">27</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">DARKORANGE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">28</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">DARKORANGE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">34</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">DARKORANGE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">22</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">26</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">29</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">33</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">emotion</span> <span class="o">==</span> <span class="n">LOVE</span><span class="p">:</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">fill</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">13</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">19</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">23</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">25</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">31</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">emotion</span> <span class="o">==</span> <span class="n">NERD</span><span class="p">:</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">fill</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">12</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">13</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">14</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">GREEN_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">16</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">18</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">19</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">GREEN_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">21</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">22</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">23</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">25</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">26</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">27</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">emotion</span> <span class="o">==</span> <span class="n">REJECT</span><span class="p">:</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">fill</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">17</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">23</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">25</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">29</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">33</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">emotion</span> <span class="o">==</span> <span class="n">SURPRISE</span><span class="p">:</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">fill</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">13</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">14</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">PURPLE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">17</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">PURPLE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">PURPLE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">22</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">PURPLE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">23</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">PURPLE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">25</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">PURPLE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">26</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">PURPLE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">emotion</span> <span class="o">==</span> <span class="n">WAVE</span><span class="p">:</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">fill</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUEGREEN_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUEGREEN_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUEGREEN_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUEGREEN_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">12</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUEGREEN_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">13</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUEGREEN_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">14</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUEGREEN_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUEGREEN_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">16</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUEGREEN_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">18</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUEGREEN_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">19</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUEGREEN_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUEGREEN_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">emotion</span> <span class="o">==</span> <span class="n">THINKING</span><span class="p">:</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">fill</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">PURPLE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">19</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">PURPLE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">22</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">PURPLE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">26</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">PURPLE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">emotion</span> <span class="o">==</span> <span class="n">SIREN</span><span class="p">:</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">fill</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">14</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">16</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">12</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">13</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">18</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">19</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="avinya.rgbStartAnimation"><a class="viewcode-back" href="../avinya.html#avinya.avinya.rgbStartAnimation">[docs]</a>  <span class="k">async</span> <span class="k">def</span> <span class="nf">rgbStartAnimation</span><span class="p">(</span><span class="n">animation</span><span class="p">,</span> <span class="n">times</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">np</span>
+    <span class="k">if</span> <span class="n">animation</span> <span class="o">==</span> <span class="n">SIREN</span><span class="p">:</span>
+      <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">times</span><span class="p">):</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">fill</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="n">np</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+        <span class="n">np</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+        <span class="n">np</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+        <span class="n">np</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+        <span class="n">np</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+        <span class="n">np</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+        <span class="n">np</span><span class="p">[</span><span class="mi">14</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+        <span class="n">np</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+        <span class="n">np</span><span class="p">[</span><span class="mi">16</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">RED_COLOR</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
+        <span class="k">await</span> <span class="n">uasyncio</span><span class="o">.</span><span class="n">sleep_ms</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">fill</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="n">np</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+        <span class="n">np</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+        <span class="n">np</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+        <span class="n">np</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+        <span class="n">np</span><span class="p">[</span><span class="mi">12</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+        <span class="n">np</span><span class="p">[</span><span class="mi">13</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+        <span class="n">np</span><span class="p">[</span><span class="mi">18</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+        <span class="n">np</span><span class="p">[</span><span class="mi">19</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+        <span class="n">np</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span> <span class="o">=</span> <span class="n">avinya</span><span class="o">.</span><span class="n">_changeColorBrightness</span><span class="p">(</span><span class="n">BLUE_COLOR</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
+        <span class="k">await</span> <span class="n">uasyncio</span><span class="o">.</span><span class="n">sleep_ms</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">pass</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">fill</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">write</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="avinya.rgbShowAnimation"><a class="viewcode-back" href="../avinya.html#avinya.avinya.rgbShowAnimation">[docs]</a>  <span class="k">def</span> <span class="nf">rgbShowAnimation</span><span class="p">(</span><span class="n">animation</span><span class="p">,</span> <span class="n">times</span><span class="p">):</span>
+    <span class="n">uasyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">avinya</span><span class="o">.</span><span class="n">rgbStartAnimation</span><span class="p">(</span><span class="n">animation</span><span class="p">,</span> <span class="n">times</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="avinya.rgbShowText"><a class="viewcode-back" href="../avinya.html#avinya.avinya.rgbShowText">[docs]</a>  <span class="k">def</span> <span class="nf">rgbShowText</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="avinya.rgbShowScrollingText"><a class="viewcode-back" href="../avinya.html#avinya.avinya.rgbShowScrollingText">[docs]</a>  <span class="k">def</span> <span class="nf">rgbShowScrollingText</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">speed</span><span class="p">):</span>
+    <span class="k">pass</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Hacktronics India.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
