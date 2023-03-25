@@ -218,18 +218,28 @@ The index value can be either 0 or 1.</p>
 <dd><p>Gets the key pressed on the gamepad. Whenever you press a key on the gamepad, it will return the code of the key.
 When you release the key, it will return another code with a ‘1’ appended to the key code, instead of ‘0’.
 For example, if you press the ‘North’ key, it will return ‘N0’, and when you release the key, it will return ‘N1’.</p>
-<p>The key codes can be one of the following:</p>
+<p>You can also use the following constants to check for the pressed or released key codes:</p>
 <blockquote>
-<div><p>North: ‘N0’, ‘N1’</p>
-<p>South: ‘S0’, ‘S1’</p>
-<p>East: ‘E0’, ‘E1’</p>
-<p>West: ‘W0’, ‘W1’</p>
-<p>Triangle: ‘T0’, ‘T1’</p>
-<p>Circle: ‘C0’, ‘C1’</p>
-<p>Cross: ‘X0’, ‘X1’</p>
-<p>Square: ‘Q0’, ‘Q1’</p>
-<p>Select: ‘L0’, ‘L1’</p>
-<p>Start: ‘R0’, ‘R1’</p>
+<div><p>TRIANGLE_PRESSED = “T0”</p>
+<p>TRIANGLE_RELEASED = “T1”</p>
+<p>CIRCLE_PRESSED = “C0”</p>
+<p>CIRCLE_RELEASED = “C1”</p>
+<p>CROSS_PRESSED = “X0”</p>
+<p>CROSS_RELEASED = “X1”</p>
+<p>SQUARE_PRESSED = “Q0”</p>
+<p>SQUARE_RELEASED = “Q1”</p>
+<p>NORTH_PRESSED = “N0”</p>
+<p>NORTH_RELEASED = “N1”</p>
+<p>SOUTH_PRESSED = “S0”</p>
+<p>SOUTH_RELEASED = “S1”</p>
+<p>EAST_PRESSED = “E0”</p>
+<p>EAST_RELEASED = “E1”</p>
+<p>WEST_PRESSED = “W0”</p>
+<p>WEST_RELEASED = “W1”</p>
+<p>SELECT_PRESSED = “L0”</p>
+<p>SELECT_RELEASED = “L1”</p>
+<p>START_PRESSED = “R0”</p>
+<p>START_RELEASED = “R1”</p>
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -768,7 +778,12 @@ i.e. it has detected a black line.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pin</strong> (<em>int</em>) – The pin number of the servo whose angle is to be set.</p></li>
+<li><p><strong>pin</strong> (<em>int</em>) – <p>The pin number of the servo whose angle is to be set.
+There are 2 servo ports on the avinya development board.
+The pin numbers of these servo ports are:</p>
+<p>SERVO1 = 22</p>
+<p>SERVO2 = 23</p>
+</p></li>
 <li><p><strong>angle</strong> (<em>int</em>) – The angle of the servo. The angle can be any value between 0 and 180.</p></li>
 </ul>
 </dd>
