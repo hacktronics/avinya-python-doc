@@ -913,7 +913,7 @@ This function is blocking and will return only once it is done speaking the text
 <dl class="py method">
 <dt class="sig sig-object py" id="avinya.Avinya.stopMotor">
 <span class="sig-name descname"><span class="pre">stopMotor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">motor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.stopMotor" title="Permalink to this definition"></a></dt>
-<dd><p>Stops the motor on the robot.</p>
+<dd><p>Stop the motor(s) on the robot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>motor</strong> (<em>int</em>) – The id or index of the motor. The id can be either MOTOR_LEFT = 0, MOTOR_RIGHT = 1 or MOTOR_BOTH = 2.</p>
@@ -941,7 +941,8 @@ This function is blocking and will return only once it is done speaking the text
 <dl class="py method">
 <dt class="sig sig-object py" id="avinya.Avinya.turnLeft">
 <span class="sig-name descname"><span class="pre">turnLeft</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.turnLeft" title="Permalink to this definition"></a></dt>
-<dd><p>Turns the robot left for a specified time.</p>
+<dd><p>Turns the robot left for a specified time. The robot turns left by setting the direction of the left motor to backward
+and the direction of the right motor to forward.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>t</strong> (<em>int</em>) – The time in seconds for which the robot should turn left.</p>
@@ -955,7 +956,8 @@ This function is blocking and will return only once it is done speaking the text
 <dl class="py method">
 <dt class="sig sig-object py" id="avinya.Avinya.turnRight">
 <span class="sig-name descname"><span class="pre">turnRight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.turnRight" title="Permalink to this definition"></a></dt>
-<dd><p>Turns the robot right for a specified time.</p>
+<dd><p>Turns the robot right for a specified time. The robot turns right by setting the direction of the left motor to forward
+and the direction of the right motor to backward.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>t</strong> (<em>int</em>) – The time in seconds for which the robot should turn right.</p>
