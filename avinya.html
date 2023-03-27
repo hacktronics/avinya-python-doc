@@ -50,6 +50,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.getDistance"><code class="docutils literal notranslate"><span class="pre">Avinya.getDistance()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.getGamepadKey"><code class="docutils literal notranslate"><span class="pre">Avinya.getGamepadKey()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.getIRSensorValue"><code class="docutils literal notranslate"><span class="pre">Avinya.getIRSensorValue()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.getMotorSpeed"><code class="docutils literal notranslate"><span class="pre">Avinya.getMotorSpeed()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.initLineFollowingParameters"><code class="docutils literal notranslate"><span class="pre">Avinya.initLineFollowingParameters()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.isButtonPressed"><code class="docutils literal notranslate"><span class="pre">Avinya.isButtonPressed()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.isIRSensorActive"><code class="docutils literal notranslate"><span class="pre">Avinya.isIRSensorActive()</span></code></a></li>
@@ -265,6 +266,24 @@ The right IR sensor is connected to the 35 pin of the ESP32.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>value</strong> – The analog reading of the IR sensor.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.getMotorSpeed">
+<span class="sig-name descname"><span class="pre">getMotorSpeed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">motor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.getMotorSpeed" title="Permalink to this definition"></a></dt>
+<dd><p>Gets the speed of the motor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>motor</strong> (<em>int</em>) – The id of the motor whose speed is to be set. The id can be either MOTOR_LEFT = 0, MOTOR_RIGHT = 1.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>speed</strong> – The speed of the motor. The speed can be any value between 0 and 1023.
+This value is mapped to the duty cycle of the MCPWM signal.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>int</p>
