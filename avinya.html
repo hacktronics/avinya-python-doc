@@ -789,7 +789,8 @@ i.e. it has detected a black line.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>motor</strong> (<em>int</em>) – The id of the motor whose speed is to be set. The id can be either MOTOR_LEFT = 0, MOTOR_RIGHT = 1 or MOTOR_BOTH = 2.</p></li>
-<li><p><strong>speed</strong> (<em>int</em>) – The speed of the motor. The speed can be any value between 0 and 1023. This value is mapped to the duty cycle of the MCPWM signal.</p></li>
+<li><p><strong>speed</strong> (<em>int</em>) – The speed of the motor. The speed is represented as percentage value between 0 and 100%,
+which is mapped to the duty cycle of the MCPWM signal, a value between 0 and 1023.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
