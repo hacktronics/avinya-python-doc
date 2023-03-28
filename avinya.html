@@ -17,6 +17,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Color module" href="Color.html" />
     <link rel="prev" title="Welcome to Avinya’s documentation!" href="index.html" /> 
 </head>
 
@@ -67,8 +68,11 @@
 <li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.rgbClearDisplay"><code class="docutils literal notranslate"><span class="pre">Avinya.rgbClearDisplay()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.rgbClearPixel"><code class="docutils literal notranslate"><span class="pre">Avinya.rgbClearPixel()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.rgbDrawPattern"><code class="docutils literal notranslate"><span class="pre">Avinya.rgbDrawPattern()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.rgbMatrixClearPixel"><code class="docutils literal notranslate"><span class="pre">Avinya.rgbMatrixClearPixel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.rgbMatrixSetPixelWithBrightness"><code class="docutils literal notranslate"><span class="pre">Avinya.rgbMatrixSetPixelWithBrightness()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.rgbSetBrightness"><code class="docutils literal notranslate"><span class="pre">Avinya.rgbSetBrightness()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.rgbSetPixelColor"><code class="docutils literal notranslate"><span class="pre">Avinya.rgbSetPixelColor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.rgbSetPixelColorWithBrightness"><code class="docutils literal notranslate"><span class="pre">Avinya.rgbSetPixelColorWithBrightness()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.rgbShowAnimation"><code class="docutils literal notranslate"><span class="pre">Avinya.rgbShowAnimation()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.rgbShowEmotion"><code class="docutils literal notranslate"><span class="pre">Avinya.rgbShowEmotion()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#avinya.Avinya.rgbShowScrollingText"><code class="docutils literal notranslate"><span class="pre">Avinya.rgbShowScrollingText()</span></code></a></li>
@@ -96,6 +100,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#avinya.startScratchMode"><code class="docutils literal notranslate"><span class="pre">startScratchMode()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="Color.html">Color module</a></li>
 </ul>
 
         </div>
@@ -404,7 +409,7 @@ The right motor is connected to the IN1: 4 and IN2: 16 pins of the ESP32.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="avinya.Avinya.playAudio">
-<span class="sig-name descname"><span class="pre">playAudio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">audioFile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.playAudio" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">playAudio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wavAudioFile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.playAudio" title="Permalink to this definition"></a></dt>
 <dd><p>Play an wave audio file. This function is non-blocking and will return immediately and continuously play the audio file.
 It will play the audio file at the default sample rate of 16KHz using the I2S interface on Pins:</p>
 <blockquote>
@@ -414,7 +419,7 @@ It will play the audio file at the default sample rate of 16KHz using the I2S in
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>audioFile</strong> (<em>str</em>) – The path to the wave audio file to play, ex: ‘/audio.wav’</p>
+<dd class="field-odd"><p><strong>wavAudioFile</strong> (<em>str</em>) – The path to the wave audio file to play, ex: ‘/audio.wav’</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -424,7 +429,7 @@ It will play the audio file at the default sample rate of 16KHz using the I2S in
 
 <dl class="py method">
 <dt class="sig sig-object py" id="avinya.Avinya.playAudioUntilDone">
-<span class="sig-name descname"><span class="pre">playAudioUntilDone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">audioFile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.playAudioUntilDone" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">playAudioUntilDone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wavAudioFile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.playAudioUntilDone" title="Permalink to this definition"></a></dt>
 <dd><p>Play an wave audio file until it is done. This function is blocking and will not return until the audio file is done playing.
 It will play the audio file at the default sample rate of 16KHz using the I2S interface on Pins:</p>
 <blockquote>
@@ -434,7 +439,7 @@ It will play the audio file at the default sample rate of 16KHz using the I2S in
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>audioFile</strong> (<em>str</em>) – The path to the wave audio file to play, ex: ‘/audio.wav’</p>
+<dd class="field-odd"><p><strong>wavAudioFile</strong> (<em>str</em>) – The path to the wave audio file to play, ex: ‘/audio.wav’</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -481,7 +486,7 @@ The duration is the duration of the tone in milliseconds.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>note</strong> (<em>int</em>) – The frequency of the tone in Hz.</p></li>
-<li><p><strong>duration</strong> (<em>int</em>) – The duration of the tone in milliseconds.</p></li>
+<li><p><strong>duration</strong> (<em>int</em>) – The duration of the tone as a fraction. Whether the duration is a whole note, half note, quarter note, etc.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -613,6 +618,42 @@ and the last character in the string represents the LED at the bottom right corn
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.rgbMatrixClearPixel">
+<span class="sig-name descname"><span class="pre">rgbMatrixClearPixel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.rgbMatrixClearPixel" title="Permalink to this definition"></a></dt>
+<dd><p>Clears a specific pixel on the RGB Neopixel display.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>row</strong> (<em>int</em>) – The row number of the pixel. The row number is 1 based. The row number starts from 1 and ends at 5.</p></li>
+<li><p><strong>col</strong> (<em>int</em>) – The column number of the pixel. The column number is 1 based. The column number starts from 1 and ends at 7.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.rgbMatrixSetPixelWithBrightness">
+<span class="sig-name descname"><span class="pre">rgbMatrixSetPixelWithBrightness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">brightness</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.rgbMatrixSetPixelWithBrightness" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the color of a specific pixel on the RGB Neopixel display.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>row</strong> (<em>int</em>) – The row number of the pixel. The row number is 1 based. The row number starts from 1 and ends at 5.</p></li>
+<li><p><strong>col</strong> (<em>int</em>) – The column number of the pixel. The column number is 1 based. The column number starts from 1 and ends at 7.</p></li>
+<li><p><strong>color</strong> (<em>tuple</em>) – The color of the pixel. The color is a tuple of 3 values (R, G, B) where each value is between 0 and 255.</p></li>
+<li><p><strong>brightness</strong> (<em>int</em>) – The brightness of the RGB Neopixel. The brightness can be any value between 0 and 100.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="avinya.Avinya.rgbSetBrightness">
 <span class="sig-name descname"><span class="pre">rgbSetBrightness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">brightness</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.rgbSetBrightness" title="Permalink to this definition"></a></dt>
 <dd><p>Sets the brightness of the RGB Neopixel display.
@@ -642,6 +683,29 @@ There are 35 pixels in total, in a 5x7 matrix, starting from the top left corner
 The pixel number starts from 0 and ends at 34.</p></li>
 <li><p><strong>color</strong> (<em>tuple</em>) – The color of the pixel. The color is a tuple of 3 values (R, G, B) where each value is between 0 and 255.</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="avinya.Avinya.rgbSetPixelColorWithBrightness">
+<span class="sig-name descname"><span class="pre">rgbSetPixelColorWithBrightness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pixel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">brightness</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#avinya.Avinya.rgbSetPixelColorWithBrightness" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the color of a specific pixel on the RGB Neopixel display.
+The pixel number is 0 based. The pixels index/number starts from the left and goes to the right,
+and then the next row. The color is a tuple of 3 values (R, G, B) where each value is between 0 and 255.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pixel</strong> (<em>int</em>) – The pixel number on the RGB Neopixel display. The pixel number is 0 based.
+The pixels index/number starts from the left and goes to the right, and then to the next row again from left to right and so on.
+There are 35 pixels in total, in a 5x7 matrix, starting from the top left corner, and ending at the bottom right corner.
+The pixel number starts from 0 and ends at 34.</p></li>
+<li><p><strong>color</strong> (<em>tuple</em>) – The color of the pixel. The color is a tuple of 3 values (R, G, B) where each value is between 0 and 255.</p></li>
+<li><p><strong>brightness</strong> (<em>int</em>) – The brightness of the RGB Neopixel. The brightness can be any value between 0 and 100.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -740,7 +804,8 @@ the text in green. (0, 0, 255) will display the text in blue.</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>motor</strong> (<em>int</em>) – The id or index of the motor. The id can be either MOTOR_LEFT = 0, MOTOR_RIGHT = 1 or MOTOR_BOTH = 2.</p></li>
 <li><p><strong>direction</strong> (<em>int</em>) – The direction in which the motor should run. The direction can be either FORWARD = 0 or BACKWARD = 1.</p></li>
-<li><p><strong>speed</strong> (<em>int</em>) – The speed at which the motor should run. The speed can be any value between 0 and 1023.</p></li>
+<li><p><strong>speed</strong> (<em>int</em>) – The speed at which the motor should run. Speed is entered as percentage value between 0 and 100,
+which is mapped to the MCPWM range 0 to 1023.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1053,6 +1118,7 @@ In the Scratch app, you need to provide the IP address of the robot, so that it 
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="index.html" class="btn btn-neutral float-left" title="Welcome to Avinya’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Color.html" class="btn btn-neutral float-right" title="Color module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

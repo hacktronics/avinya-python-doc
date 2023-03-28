@@ -11,6 +11,7 @@ Welcome to Avinya's documentation!
    :caption: Contents:
 
    avinya
+   Color
 
 Indices and tables
 ==================
